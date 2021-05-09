@@ -3,3 +3,5 @@ PyQtWebEngine
 folium
 matplotlib
 pandas
+xlrd
+openpyxl
