@@ -1,10 +1,19 @@
 import matplotlib, folium, sys, io, requests, json
 import pandas as pd
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+
+matplotlib.use('Qt5Agg')
 
 user_lat = 43.01272028760803
 user_lon = -83.71256602748012
+
+df_ind = 1
 
 class DataViz(QMainWindow):
     def __init__(self):
@@ -38,23 +47,23 @@ class DataViz(QMainWindow):
 
 
         self.distance_widget = QGroupBox(self)
-        layout = QHBoxLayout()
+        hlayout = QHBoxLayout()
 
         distance_mi = str(round(route["legs"][0]["distance"] / 1609))
         self.distance = QLabel(distance_mi, self)
-        layout.addWidget(self.distance)
+        hlayout.addWidget(self.distance)
 
         distance_lbl = QLabel('miles\naway', self)
-        layout.addWidget(distance_lbl)
+        hlayout.addWidget(distance_lbl)
 
         duration_min = str(round(route["legs"][0]["duration"] / 60))
         self.duration = QLabel(duration_min, self)
-        layout.addWidget(self.duration)
+        hlayout.addWidget(self.duration)
 
         duration_lbl = QLabel('minutes\naway', self)
-        layout.addWidget(duration_lbl)
+        hlayout.addWidget(duration_lbl)
 
-        self.distance_widget.setLayout(layout)
+        self.distance_widget.setLayout(hlayout)
         self.distance_widget.resize(300, 100)
         self.distance_widget.move(5, 305)
 
@@ -62,6 +71,35 @@ class DataViz(QMainWindow):
         # init capacity widget
         # -------------------------
 
+        groupbox = QGroupBox(self)
+        vlayout = QVBoxLayout()
+
+        # data
+        open_beds = self.hospitals['open_beds'][df_ind]
+        total_beds = self.hospitals['total_beds'][df_ind]
+        val = [open_beds, total_beds - open_beds]
+
+        # append data and assign color
+        val.append(sum(val))
+        colors = ['gray', 'blue', 'white']
+
+        # plot
+        fig = plt.figure(figsize=(500, 500),dpi=100)
+        ax = fig.add_subplot(1,1,1)
+        ax.pie(val, colors=colors)
+        ax.add_artist(plt.Circle((0, 0), 0.6, color='white'))
+        
+        fig.subplots_adjust(0,-0.75,1,1)
+
+        static_canvas = FigureCanvasQTAgg(fig)
+
+        vlayout.addWidget(static_canvas)
+
+        groupbox.setLayout(vlayout)
+        groupbox.resize(500, 250)
+        groupbox.move(305, 305)
+
+        self.setLayout(vlayout)
 
         # -------------------------
         # init helipad widget
@@ -89,8 +127,11 @@ class DataViz(QMainWindow):
 
 
 
+
+
 app = QApplication(sys.argv)
 #app.setStyleSheet()
 window = DataViz()
 window.show()
 sys.exit(app.exec_())
+
