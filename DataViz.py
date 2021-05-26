@@ -168,7 +168,22 @@ class DataViz(QMainWindow):
         # -------------------------
         # init helipad widget
         # -------------------------
+        self.helipad_widget = QGroupBox(self)
+        hlayout_helipad = QHBoxLayout()
 
+        helipad_count = self.hospitals.iloc[df_ind]['helipads']
+        self.helipads = QLabel(str(helipad_count), self)
+        hlayout_helipad.addWidget(self.helipads)
+
+        lbl = 'helipad' if helipad_count == 1 else 'helipads'
+        helipad_lbl = QLabel(lbl, self)
+        hlayout_helipad.addWidget(helipad_lbl)
+
+        self.helipad_widget.setLayout(hlayout_helipad)
+        self.helipad_widget.resize(10, 10)
+        self.helipad_widget.move(5, 305)
+
+        vlayout_left.addWidget(self.helipad_widget)
 
         # -------------------------
         # init ventilators widget
