@@ -1,4 +1,4 @@
-import matplotlib, folium, sys, io, requests, json, operator
+import matplotlib, folium, sys, io, requests, json, operator, time
 import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -77,19 +77,6 @@ class DataViz(QMainWindow):
         # add column to main horizontal layout
         hlayout_main.addWidget(self.vbox_right)
 
-        # --------------------------------------------------
-        # bottom horizontal layout w/ vents, tests widgets
-        # --------------------------------------------------
-        self.hbox_bottom = QGroupBox(self)
-        hlayout_bottom = QHBoxLayout()
-        self.hbox_bottom.setLayout(hlayout_bottom)
-        self.hbox_bottom.resize(300, self.window_height / 2)
-        #self.hbox_bottom.move(5, self.window_height / 2)
-        
-        # add column to main horizontal layout
-        vlayout_center.addWidget(self.hbox_bottom)
-    
-
 
         # -------------------------
         # init map widget
@@ -107,6 +94,7 @@ class DataViz(QMainWindow):
         self.map_widget.setHtml(data.getvalue().decode())
 
         vlayout_left.addWidget(self.map_widget)
+
 
         # -------------------------
         # init distance widget
@@ -140,6 +128,7 @@ class DataViz(QMainWindow):
 
         vlayout_left.addWidget(self.distance_widget)
 
+
         # -------------------------
         # init capacity widget
         # -------------------------
@@ -165,6 +154,7 @@ class DataViz(QMainWindow):
 
         vlayout_right.addWidget(static_canvas)
 
+
         # -------------------------
         # init helipad widget
         # -------------------------
@@ -184,6 +174,36 @@ class DataViz(QMainWindow):
         self.helipad_widget.move(5, 305)
 
         vlayout_left.addWidget(self.helipad_widget)
+
+
+        # -------------------------
+        # init staff widget
+        # -------------------------
+        labels = 12 * [''] # use this to store time
+        staff = 12 * [0]
+        staff[-1] = self.hospitals.iloc[df_ind]['staff']
+        fig = plt.figure(figsize=(20, 10), dpi=100)
+        ax = fig.add_subplot(1, 1, 1)
+        ax.plot(labels, staff, color=DARK_BLUE)
+
+        ax.set_ylabel('Time')
+        ax.set_title('Available Staff')
+
+        vlayout_center.addWidget(FigureCanvasQTAgg(fig))
+
+
+        # --------------------------------------------------
+        # bottom horizontal layout w/ vents, tests widgets
+        # --------------------------------------------------
+        self.hbox_bottom = QGroupBox(self)
+        hlayout_bottom = QHBoxLayout()
+        self.hbox_bottom.setLayout(hlayout_bottom)
+        self.hbox_bottom.resize(300, self.window_height / 2)
+        #self.hbox_bottom.move(5, self.window_height / 2)
+        
+        # add column to main horizontal layout
+        vlayout_center.addWidget(self.hbox_bottom)
+
 
         # -------------------------
         # init ventilators widget
@@ -206,6 +226,7 @@ class DataViz(QMainWindow):
 
         hlayout_bottom.addWidget(FigureCanvasQTAgg(fig))
 
+
         # -------------------------
         # init tests widget
         # -------------------------
@@ -226,16 +247,21 @@ class DataViz(QMainWindow):
 
         hlayout_bottom.addWidget(FigureCanvasQTAgg(fig))
 
+
         # -------------------------
         # init insurance widget
         # -------------------------
+        self.insurance_widget = QListWidget(self)
+        insurances = self.hospitals.iloc[df_ind]['insurance'].split(',')
+        for name in insurances:
+            self.insurance_widget.addItem(QListWidgetItem(name))
+        scroll_bar = QScrollBar(self)
+        #scroll_bar.setStyleSheet()
+        self.insurance_widget.setVerticalScrollBar(scroll_bar)
 
+        vlayout_right.addWidget(self.insurance_widget)
 
-        # -------------------------
-        # init staff widget
-        # -------------------------
-
-
+        
 
 
 
