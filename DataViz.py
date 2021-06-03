@@ -29,6 +29,8 @@ class DataViz(QMainWindow):
         super().__init__()
         self.window_width, self.window_height = 1200, 800
         self.setMinimumSize(self.window_width, self.window_height)
+        self.showMaximized()
+        self.window_width, self.window_height = self.width(), self.height()
         self.hospitals = pd.read_excel('sample_data.xlsx')
 
         # --------------------------------------------------
@@ -36,10 +38,6 @@ class DataViz(QMainWindow):
         # --------------------------------------------------
         self.hbox_main = QGroupBox(self)
         hlayout_main = QHBoxLayout()
-        self.hbox_main.setLayout(hlayout_main)
-        #self.hbox_main.resize(self.window_width, self.window_height)
-        #self.hbox_main.move(0, 0)
-        self.setCentralWidget(self.hbox_main)
 
         # --------------------------------------------------
         # left col w/map and distance widgets
@@ -47,7 +45,7 @@ class DataViz(QMainWindow):
         self.vbox_left = QGroupBox(self)
         vlayout_left = QVBoxLayout()
         self.vbox_left.setLayout(vlayout_left)
-        self.vbox_left.resize(300, self.window_height)
+        # self.vbox_left.resize(self.window_width/3, self.window_height)
         #self.vbox_left.move(0, 0)
         
         # add column to main horizontal layout
@@ -59,7 +57,7 @@ class DataViz(QMainWindow):
         self.vbox_center = QGroupBox(self)
         vlayout_center = QVBoxLayout()
         self.vbox_center.setLayout(vlayout_center)
-        self.vbox_center.resize(500, self.window_height)
+        # self.vbox_center.resize(self.window_width/3, self.window_height)
         #self.vbox_center.move(300, 0)
         
         # add column to main horizontal layout
@@ -71,11 +69,15 @@ class DataViz(QMainWindow):
         self.vbox_right = QGroupBox(self)
         vlayout_right = QVBoxLayout()
         self.vbox_right.setLayout(vlayout_right)
-        self.vbox_right.resize(300, self.window_height)
+        # self.vbox_right.resize(self.window_width/3, self.window_height)
         #self.vbox_right.move(800, 0)
         
         # add column to main horizontal layout
         hlayout_main.addWidget(self.vbox_right)
+
+
+        self.hbox_main.setLayout(hlayout_main)
+        self.setCentralWidget(self.hbox_main)
 
 
         # -------------------------
@@ -262,8 +264,6 @@ class DataViz(QMainWindow):
         vlayout_right.addWidget(self.insurance_widget)
 
         
-
-
 
 app = QApplication(sys.argv)
 #app.setStyleSheet()
