@@ -1,0 +1,11 @@
+:root {
+    --purple: #9868d4;
+    --dark_blue: #68a0e3;
+    --light_blue: #88d5eb;
+    --green: #66d195;
+    --light_gray: #e0e0e0;
+}
+
+QWidget {
+    background-color: var(--purple);
+}

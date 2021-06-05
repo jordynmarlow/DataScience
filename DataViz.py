@@ -266,7 +266,7 @@ class DataViz(QMainWindow):
         
 
 app = QApplication(sys.argv)
-#app.setStyleSheet()
+app.setStyleSheet('style.qss')
 window = DataViz()
 window.show()
 sys.exit(app.exec_())
